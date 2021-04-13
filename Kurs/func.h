@@ -10,6 +10,16 @@ struct CharNum
     char letter;
     int _count;
 };
+struct BRecord {
+    int leaf1st;
+    int leaf2st;
+    string sall;
+};
+struct Blist {
+    BRecord  rec;
+    Blist* next, * prev, * l1st, * l2st;
+};
+
 
 char *TextInput(int &k);
 void menu();

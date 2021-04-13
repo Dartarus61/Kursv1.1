@@ -169,5 +169,12 @@ int fcount(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     {
         cout << letters[i].letter << " " << letters[i]._count << endl;
     }
+    
+    return 0;
+}
+int binary(vector<CharNum>& letters) {
+    int sizev = letters.size();
+    Blist* head = 0, * last = 0;
+
     return 0;
 }
