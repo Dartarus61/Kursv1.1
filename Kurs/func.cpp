@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include<windows.h>
+TList *Head=0, *Last=0;
 using namespace std;
 
 
@@ -63,6 +64,7 @@ char* TextInput(int& k) { //считывание текста и запись в бафф
     ifstream fin("inside.txt");
     string s;
     getline(fin, s);
+    fin.close();
     size_t sr = s.length();
     cout << "s=" << s << endl;
     cout << "size of string=" << sr << endl;
@@ -186,9 +188,39 @@ int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     
     return 0;
 }
+void AddListEl(vector<CharNum>& letters,int &k) {
+
+    TList* r = new TList;
+    r->Rec.leaf1st = letters[k]._count;
+    r->Rec.sall = letters[k].letter;
+    r->Next = 0;	r->Prev = 0;
+    if (Last) { Last->Next = r; r->Prev = Last; }
+    if (!Head) Head = r;
+    Last = r;
+}
+void Write() {
+    //Так же в цикле
+    for (Last = Head; Last; Last = Last->Next) {
+        //выводим на экран элементы списка
+        cout.width(10);
+        cout << Last->Rec.leaf1st;
+    }
+    cout << endl;
+
+    for (Last = Head; Last; Last = Last->Next) {
+        //выводим на экран элементы списка
+        cout.width(10);
+        cout.setf(ios_base::right);
+        cout << Last->Rec.sall;
+    }; cout << endl;
+    cout << endl;
+}
 int binary_tree(vector<CharNum>& letters) {
     int sizev = letters.size();
-    Blist* head = 0, * last = 0;
-
+    int k = 0;
+    for (int i = 0; i < sizev; i++) {
+        AddListEl(letters, k);
+        k++;
+    }
     return 0;
 }

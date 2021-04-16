@@ -15,9 +15,9 @@ struct BRecord {
     int leaf2st;
     string sall;
 };
-struct Blist {
-    BRecord  rec;
-    Blist* next, * prev, * l1st, * l2st;
+struct TList {
+    BRecord  Rec;
+    TList* Next, * Prev, * l1st, * l2st;
 };
 
 
@@ -30,3 +30,5 @@ CharNum VecFilling();
 CharNum VecAlphabet(vector<CharNum>& letters);
 int VecSotring(vector<CharNum>& letters, char* buff, int &g);
 int binary_tree(vector<CharNum>& letters);
+void AddListEl(vector<CharNum>& letters, int& k);
+void Write();
