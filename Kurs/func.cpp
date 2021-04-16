@@ -8,8 +8,22 @@ using namespace std;
 
 
 
-void output() {
-    cout << "Gjiksad";
+void entertext() {
+    cout << "Enter the text:";
+    ofstream fout("inside.txt");
+    string gs;
+    if (fout) {
+        cin.ignore();
+        getline(cin, gs);
+    }
+    else {
+        cout << "error" << endl;
+    }
+    cout << "s=" << gs << endl;
+    fout<< gs;
+    fout.close();
+
+
 }
 
 void output_money() {
@@ -19,11 +33,11 @@ void output_money() {
 void menu() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
-    void (*Fun_list[3])() = { input, output, output_money };
+    void (*Fun_list[3])() = { code, entertext, output_money };
     int num;
     cout << "welcome to programm of coding by Huffman.\n Enter the comand, what you want:" << endl;
     for (;;) {
-        cout << "Coding text - 1\nsomething else #1 - 2\nsomething else #2 - 3\nlogout - 0" << endl;
+        cout << "Coding text - 1\nenter text - 2\nsomething else #2 - 3\nlogout - 0" << endl;
         cin >> num;
         //system("cls");
         if (num == 0) {
@@ -38,8 +52,8 @@ void menu() {
     }
 }
 
-void input() {
-    fvec();
+void code() {
+    VecFilling();
 }
 
 char* TextInput(int& k) { //считывание текста и запись в бафф
@@ -62,7 +76,7 @@ char* TextInput(int& k) { //считывание текста и запись в бафф
     k = strlen(buff);//передать рандом число чтоб записать туда длину 
     return buff;
 }
-CharNum abcvec(vector<CharNum>& letters) { // заполнение вектора алфавитом и цифрами
+CharNum VecAlphabet(vector<CharNum>& letters) { // заполнение вектора алфавитом и цифрами
     CharNum data;
     const int n = 26;
     char j = 'a';
@@ -116,10 +130,10 @@ CharNum abcvec(vector<CharNum>& letters) { // заполнение вектора алфавитом и циф
     letters.push_back(data);
     return(data);
 }
-CharNum fvec() { // заполнение вектора
+CharNum VecFilling() { // заполнение вектора
     vector<CharNum> letters;
     
-    abcvec(letters);
+    VecAlphabet(letters);
     CharNum data;
     data.letter = 'out';
     data._count = 12345;
@@ -129,10 +143,10 @@ CharNum fvec() { // заполнение вектора
     memcpy(cbuff, TextInput(l), strlen(TextInput(l))+1);
     cout << "неправильно: " << cbuff << endl;
     cout << "L=" << l << endl;
-    fcount(letters, cbuff, l);
+    VecSotring(letters, cbuff, l);
     return (data);
 }
-int fcount(vector<CharNum>& letters, char* buff, int& g) { // сортировка
+int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     int vdl = letters.size();
     size_t dl = strlen(buff);
     auto iter = letters.begin();
@@ -172,7 +186,7 @@ int fcount(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     
     return 0;
 }
-int binary(vector<CharNum>& letters) {
+int binary_tree(vector<CharNum>& letters) {
     int sizev = letters.size();
     Blist* head = 0, * last = 0;
 

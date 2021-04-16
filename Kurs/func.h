@@ -24,8 +24,9 @@ struct Blist {
 char *TextInput(int &k);
 void menu();
 void output_money();
-void output();
-void input();
-CharNum fvec();
-CharNum abcvec(vector<CharNum>& letters);
-int fcount(vector<CharNum>& letters, char* buff, int &g);
+void entertext();
+void code();
+CharNum VecFilling();
+CharNum VecAlphabet(vector<CharNum>& letters);
+int VecSotring(vector<CharNum>& letters, char* buff, int &g);
+int binary_tree(vector<CharNum>& letters);
