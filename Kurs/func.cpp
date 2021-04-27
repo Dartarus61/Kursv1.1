@@ -146,6 +146,7 @@ CharNum VecFilling() { // заполнение вектора
     cout << "неправильно: " << cbuff << endl;
     cout << "L=" << l << endl;
     VecSotring(letters, cbuff, l);
+    binary_tree(letters);
     return (data);
 }
 int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
@@ -212,15 +213,16 @@ void Write() {
         cout.width(10);
         cout.setf(ios_base::right);
         cout << Last->Rec.sall;
-    }; cout << endl;
+    }; 
+    cout << endl;
     cout << endl;
 }
 int binary_tree(vector<CharNum>& letters) {
     int sizev = letters.size();
     int k = 0;
     for (int i = 0; i < sizev; i++) {
-        AddListEl(letters, k);
-        k++;
+        AddListEl(letters, i);
     }
+    Write();
     return 0;
-}
+} 

@@ -13,7 +13,7 @@ struct CharNum
 struct BRecord {
     int leaf1st;
     int leaf2st;
-    string sall;
+    char sall;
 };
 struct TList {
     BRecord  Rec;
