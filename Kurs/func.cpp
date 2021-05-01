@@ -185,7 +185,7 @@ int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     {
         cout << letters[i].letter << " " << letters[i]._count << endl;
     }
-    
+    binary_tree(letters);
     return 0;
 }
 void AddListEl(vector<CharNum>& letters,int &k) {

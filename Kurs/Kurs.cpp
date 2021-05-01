@@ -12,7 +12,14 @@ using namespace std;
 
 int main()
 {
-    menu();
+    try {
+        menu();
+        return 0;
+
+    }
+    catch (exception ex) {
+        cout << "sdq";
+    }
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
