@@ -156,10 +156,11 @@ CharNum VecFilling() { // заполнение вектора
     cout << "L=" << l << endl;
     VecSotring(letters, cbuff, l);
     binary_tree(letters);
-    CreateCode(cbuff, Last, letters);
-    for (int i = 0; i < letters.size(); i++) {
+    //CreateCode(cbuff, Last, letters);
+    /*for (int i = 0; i < letters.size(); i++) {
         cout << letters[i].letter << " " << letters[i].code << endl;
-    }
+    }*/
+    treeprint(Last);
     return (data);
 }
 int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
@@ -215,7 +216,8 @@ TList AddListEl(vector<CharNum>& letters,int &k) {
 }
 TList *addtotree() {
     TList* l = new TList;
-    
+    l->Rec.leaf1st = 0;
+    l->Rec.number = '\n';
     l->Next = 0;	l->Prev = 0;
     if (Last) { Last->Next = l; l->Prev = Last; }
     if (!Head) Head = l;
@@ -254,67 +256,37 @@ void treeprint(TList* tree) {
 int binary_tree(vector<CharNum>& letters) {
     int sizev = letters.size();
     int k = 0; //summa vseh chastot
-    int ss = sizev/2;// для счета веток
-    int rezs;
-    TList* rez;
-    saveStr._count = 0;
     TList* p;
-    TList* unic = NULL;//доп указатель для проверок
+    TList* help;
     for (int i = 0; i < sizev; i++) {
         AddListEl(letters, i);
         k += letters[i]._count;
-       
+    }
+    int leafhelp;
+    for (int i = 0; i < sizev - 1; i++) {
+        addtotree();
+        p= addtotree();
+        p->Rec.leaf1st = Head->Rec.leaf1st + Head->Next->Rec.leaf1st;
+        p->list1 = Head;
+        p->list2 = Head->Next;
+        Head = Head->Next->Next;
+        help = Head;
+        for (int r = 1; r < sizev - 1; r++)
+        {
+            help = Head;
+            for (int k = 0; k < sizev - 1 - r; k++)
+            {
+                if (help->Rec.leaf1st > help->Next->Rec.leaf1st) {
+                    leafhelp = help->Next->Rec.leaf1st;
+                    help->Next->Rec.leaf1st = help->Rec.leaf1st;
+                    help->Rec.leaf1st = leafhelp;
+                }
+                help = help->Next;
+            }
+        }
     }
     cout << "count of count=" << k << endl;
-    TList* r = new TList;
-    if (sizev % 2 != 0) {
-        cout << "stt" << endl;
-        saveStr._count = Last->Rec.leaf1st;
-        saveStr.letter = Last->Rec.sall;
-        unic = Last;
-        ss--;
-    }
-    dhead = Head;
-    cout << Last->Rec.sall<<" test "<<Last->Rec.leaf1st << endl;
-    int chet=0;
-    for (int i = 0; i < ss; i++) {
-           TList *p = addtotree();
-                p->Rec.leaf1st = dhead->Rec.leaf1st + dhead->Next->Rec.leaf1st;
-                p->Rec.sall = dhead->Rec.sall + dhead->Next->Rec.sall;
-                p->list1 = dhead;
-                
-                p->list2 = dhead->Next;
-                
-                dhead = dhead->Next->Next;
-                chet += 1;
 
-        }
-    rezs = ss;
-    cout << "test#1" << endl;
-    ss = ss / 2;
-   
-    rez = Last->Next;
-   for (int i=0;i<sizev-1;i++) { //пересмотреть создание дерева, смотри лист а4
-        cout << "fr ";
-             TList *p = addtotree();
-      
-                    p->Rec.leaf1st = dhead->Rec.leaf1st + dhead->Next->Rec.leaf1st;
-                    p->Rec.sall = dhead->Rec.sall + dhead->Next->Rec.sall;
-                    p->list1 = dhead;
-                    p->list2 = dhead->Next;
-                    dhead = dhead->Next->Next;
-                    if (unic != NULL) {
-                        if (unic->Rec.leaf1st <= Last->Rec.leaf1st) {
-                           TList *p = addtotree();
-                            p->list1 = unic;
-                            p->list2 = Last;
-                        }
-                    }
-    }
-    cout << "test#2" << endl;
-    //Last->Rec.number = "";
-    //Write();
-    //treeprint(Last);
     return 0;
 }
 void CreateCode(char* info,  TList* root, vector<CharNum>& letters)
