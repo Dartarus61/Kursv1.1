@@ -7,11 +7,6 @@
 TList* Head = 0, * Last = 0, * dhead = 0;
 CharNum saveStr;
 using namespace std;
-
-//TFreq  Freq[256];
-//TOpcode  Opcodes[256];
-//FILE* in, * out, * assemb;
-
 void entertext() {
     cout << "Enter the text:";
     ofstream fout("inside.txt");
@@ -69,15 +64,9 @@ char* TextInput(int& k) { //считывание текста и запись в бафф
     getline(fin, s);
     fin.close();
     size_t sr = s.length();
-    cout << "s=" << s << endl;
-    cout << "size of string=" << sr << endl;
     char* buff = new char[sr+1];
     memcpy(buff, s.c_str(), s.length() + 2);
-    for (int i = 0; i < sr + 1; i++)
-        cout << *(buff + i);
-    cout << "\n";
     int rt = strlen(buff);
-    cout << "Длина строки из файла " << rt << endl;
     k = strlen(buff);//передать рандом число чтоб записать туда длину 
     return buff;
 }
@@ -152,22 +141,24 @@ CharNum VecFilling() { // заполнение вектора
     char* cbuff = new char;
     int w = 0;
     memcpy(cbuff, TextInput(l), strlen(TextInput(l))+1);
-    cout << "неправильно: " << cbuff << endl;
-    cout << "L=" << l << endl;
     VecSotring(letters, cbuff, l);
     binary_tree(letters);
-    //CreateCode(cbuff, Last, letters);
-    /*for (int i = 0; i < letters.size(); i++) {
-        cout << letters[i].letter << " " << letters[i].code << endl;
-    }*/
+    string code;
+    cout << "tree" << endl;
     treeprint(Last);
+     CreateCode(cbuff, code,Last, letters);
+    Clear();
+    //codeText(letters, cbuff);
+   
+    for (int i = 0; i < letters.size(); i++) {
+        cout << letters[i].letter << " code=" << letters[i].code << endl;
+    }
     return (data);
 }
 int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     int vdl = letters.size();
     size_t dl = strlen(buff);
     auto iter = letters.begin();
-    cout << vdl << "<-Длина вектора, длина строки-> " << dl << " " << buff << " dl#2=" << g << endl;
     for (int k = 0; k < vdl; k++)
     {
         for (int i = 0; i < g; i++)
@@ -178,7 +169,6 @@ int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
             }
         }
     }
-    cout << endl;
     for (int r = 1; r < vdl; r++)
     {
         for (int k = 0; k < vdl - r; k++)
@@ -203,12 +193,26 @@ int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     
     return 0;
 }
+void Clear() {
+    //Если он вообще существует
+    if (!Head) return;
+    //В цикле пройдем последовательно по элементам
+    for (Last = Head->Next; Last; Last = Last->Next) {
+        //Освобождая их соседей сзади.
+        //т.е. убирая предыдущие
+        delete Last->Prev;
+        Head = Last;
+    }
+    delete Head;
+}
 TList AddListEl(vector<CharNum>& letters,int &k) {
 
     TList* r = new TList;
     r->Rec.leaf1st = letters[k]._count;
     r->Rec.sall = letters[k].letter;
+    r->Rec.number = '\n';
     r->Next = 0;	r->Prev = 0;
+    r->list1 = 0; r->list2 = 0;
     if (Last) { Last->Next = r; r->Prev = Last; }
     if (!Head) Head = r;
     Last = r;
@@ -222,35 +226,15 @@ TList *addtotree() {
     if (Last) { Last->Next = l; l->Prev = Last; }
     if (!Head) Head = l;
     Last = l;
- 
-    
     return l;
 }
-void Write() {
-    //Так же в цикле
-    for (Last = Head; Last; Last = Last->Next) {
-        //выводим на экран элементы списка
-        cout.width(10);
-        cout << Last->Rec.leaf1st << "       " << Last->Rec.sall << endl;
-    }
-}
-void Clear() {
-    //Если он вообще существует
-    if (!Head) return;
-    //В цикле пройдем последовательно по элементам
-    for (Last = Head->Next; Last; Last = Last->Next) {
-        //Освобождая их соседей сзади.
-        //т.е. убирая предыдущие
-        delete Last->Prev;
-        Head = Last;
-    }
-    delete Head;
-}
 void treeprint(TList* tree) {
-    if (tree != NULL) { //Пока не встретится пустой узел
-        cout << tree->Rec.leaf1st << " " << tree->Rec.number << endl;; //Отображаем корень дерева
-        treeprint(tree->list1); //Рекурсивная функция для левого поддерева
-        treeprint(tree->list2); //Рекурсивная функция для правого поддерева
+   
+    if (tree != 0) { //Пока не встретится пустой узел
+       if (tree->list1 == 0 | tree->list2 == 0) exit;
+       cout <<" " <<tree->Rec.leaf1st << endl; //Отображаем корень дерева
+       treeprint(tree->list1); //Рекурсивная функция для левого поддерева
+       treeprint(tree->list2); //Рекурсивная функция для правого поддерева
     }
 }
 int binary_tree(vector<CharNum>& letters) {
@@ -258,49 +242,63 @@ int binary_tree(vector<CharNum>& letters) {
     int k = 0; //summa vseh chastot
     TList* p;
     TList* help;
+    TList* helpme;
+    help = Head;
     for (int i = 0; i < sizev; i++) {
         AddListEl(letters, i);
         k += letters[i]._count;
     }
     int leafhelp;
     for (int i = 0; i < sizev - 1; i++) {
-        addtotree();
         p= addtotree();
         p->Rec.leaf1st = Head->Rec.leaf1st + Head->Next->Rec.leaf1st;
         p->list1 = Head;
         p->list2 = Head->Next;
+        helpme = Head;
         Head = Head->Next->Next;
-        help = Head;
+        cout << "head#2=" << Head->Rec.leaf1st<< endl;
+        cout <<"p="<< p->Rec.leaf1st << endl;
         for (int r = 1; r < sizev - 1; r++)
         {
+           
             help = Head;
-            for (int k = 0; k < sizev - 1 - r; k++)
+            
+            for (int g = 0; g < sizev - 1 - r; g++)
             {
-                if (help->Rec.leaf1st > help->Next->Rec.leaf1st) {
-                    leafhelp = help->Next->Rec.leaf1st;
-                    help->Next->Rec.leaf1st = help->Rec.leaf1st;
-                    help->Rec.leaf1st = leafhelp;
-                }
-                help = help->Next;
+                 if (help->Next != NULL) {
+                    if (help->Rec.leaf1st > help->Next->Rec.leaf1st) {
+                        p->list1 = 0; p->list2 = 0;
+                        p = p->Prev;
+                        p->list1 = helpme; p->list2 = helpme->Next;
+                        cout << "change" << endl;
+                        help->Next->Rec.sall=help->Rec.sall;
+                        leafhelp = help->Next->Rec.leaf1st;
+                        help->Next->Rec.leaf1st = help->Rec.leaf1st;
+                        help->Rec.leaf1st = leafhelp;
+                        
+                    }
+                   
+                        help = help->Next;
+                    }
+                    
             }
         }
+       
     }
-    cout << "count of count=" << k << endl;
-
     return 0;
 }
-void CreateCode(char* info,  TList* root, vector<CharNum>& letters)
+void CreateCode(char* info,string code,TList* root, vector<CharNum>& letters)
 {
-    string code;
+    cout << "code=" << code << endl;
     if (root->list1 != NULL)
     {
-        code += "0";
-        CreateCode(info, root->list1,letters);
+        //code += "0";
+        CreateCode(info, code += "0",root->list1,letters);
     }
     if (root->list2 != NULL)
     {
-        code += "1";
-        CreateCode(info, root->list2,letters);
+        //code += "1";
+        CreateCode(info, code+="1",root->list2,letters);
     }
     else
     {
@@ -311,4 +309,41 @@ void CreateCode(char* info,  TList* root, vector<CharNum>& letters)
         }
     }
     code.erase(code.length() - 1);
+}
+void codeText(vector<CharNum>& letters, char* info) {
+    string testcode;
+    for (int i = 0; i < strlen(info); i++) {
+        for (int k = 0; k < letters.size(); k++) {
+            if (info[i] == letters[k].letter) {
+                testcode += letters[k].code;
+                break;
+            }
+        }
+    }
+    cout << testcode;
+    ofstream fout("test.txt");
+    if (fout) {
+        fout << testcode;
+    }
+    else {
+        cout << "error" << endl;
+    }
+    fout << "\n";
+    for (int i = 0; i < letters.size(); i++) {
+        fout << letters[i].letter << " " << letters[i].code << endl;
+    }
+    
+    fout.close();
+}
+void decodetext(vector<CharNum>& letters, string code) {
+    ifstream fin("test.txt");
+    string s;
+    getline(fin, s);
+    fin.close();
+    size_t sr = s.length();
+    ofstream fout("finaltest.txt");
+    while (s.find('1') != 0 | s.find('0') != 0) {
+        
+    }
+
 }
