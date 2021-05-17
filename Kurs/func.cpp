@@ -143,10 +143,10 @@ CharNum VecFilling() { // заполнение вектора
     memcpy(cbuff, TextInput(l), strlen(TextInput(l))+1);
     VecSotring(letters, cbuff, l);
     binary_tree(letters);
-    string code;
+    string code="";
     cout << "tree" << endl;
     treeprint(Last);
-     CreateCode(cbuff, code,Last, letters);
+    CreateCode(code,Last, letters);
     Clear();
     //codeText(letters, cbuff);
    
@@ -198,8 +198,6 @@ void Clear() {
     if (!Head) return;
     //В цикле пройдем последовательно по элементам
     for (Last = Head->Next; Last; Last = Last->Next) {
-        //Освобождая их соседей сзади.
-        //т.е. убирая предыдущие
         delete Last->Prev;
         Head = Last;
     }
@@ -232,7 +230,7 @@ void treeprint(TList* tree) {
    
     if (tree != 0) { //Пока не встретится пустой узел
        if (tree->list1 == 0 | tree->list2 == 0) exit;
-       cout <<" " <<tree->Rec.leaf1st << endl; //Отображаем корень дерева
+       cout <<" " <<tree->Rec.leaf1st <<" " <<tree->Rec.sall<< endl; //Отображаем корень дерева
        treeprint(tree->list1); //Рекурсивная функция для левого поддерева
        treeprint(tree->list2); //Рекурсивная функция для правого поддерева
     }
@@ -272,6 +270,7 @@ int binary_tree(vector<CharNum>& letters) {
                         p->list1 = helpme; p->list2 = helpme->Next;
                         cout << "change" << endl;
                         help->Next->Rec.sall=help->Rec.sall;
+                        help->Rec.sall = 0;
                         leafhelp = help->Next->Rec.leaf1st;
                         help->Next->Rec.leaf1st = help->Rec.leaf1st;
                         help->Rec.leaf1st = leafhelp;
@@ -287,29 +286,36 @@ int binary_tree(vector<CharNum>& letters) {
     }
     return 0;
 }
-void CreateCode(char* info,string code,TList* root, vector<CharNum>& letters)
+void CreateCode(string& code, TList* root, vector<CharNum>& letters)
 {
     cout << "code=" << code << endl;
-    if (root->list1 != NULL)
-    {
-        //code += "0";
-        CreateCode(info, code += "0",root->list1,letters);
+    if (root->list1) {
+        code+="0";
+        CreateCode(code, root->list1, letters);
+   }
+    if (root->list2) {
+        code+="1";
+        CreateCode(code, root->list2, letters);
     }
-    if (root->list2 != NULL)
-    {
-        //code += "1";
-        CreateCode(info, code+="1",root->list2,letters);
-    }
-    else
-    {
+    if (root->Rec.sall) {
         for (int i = 0; i < letters.size(); i++)
         {
-            if (root->Rec.sall == letters[i].letter)
+            if (root->Rec.sall == letters[i].letter) {
                 letters[i].code = code;
+                break;
+            }
         }
     }
-    code.erase(code.length() - 1);
+    if (code.size())
+        code.erase(code.length()-1);
 }
+//void traversal_code(string code) {
+//    this->code = code;
+//    if (list1 != 0 || list2 != 0) {
+//        list1->traversal_code(code + "1");
+//        list2->traversal_code(code + "0");
+//    }
+//}
 void codeText(vector<CharNum>& letters, char* info) {
     string testcode;
     for (int i = 0; i < strlen(info); i++) {

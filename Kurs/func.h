@@ -18,6 +18,7 @@ struct BRecord {
     int leaf1st;
     char sall;
     string number;
+    bool test;
 };
 struct TList {
     BRecord  Rec;
@@ -37,5 +38,5 @@ int binary_tree(vector<CharNum>& letters);
 TList AddListEl(vector<CharNum>& letters, int& k);
 void Clear();
 void treeprint(TList* tree);
-void CreateCode(char* info, string code,TList* root, vector<CharNum>& letters);
+void CreateCode(string &code,TList* root, vector<CharNum>& letters);
 void codeText(vector<CharNum>& letters, char* info);
