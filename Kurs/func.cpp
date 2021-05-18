@@ -1,9 +1,4 @@
 #include "func.h"
-#include <iostream>
-#include<fstream>
-#include<string>
-#include<vector>
-#include<windows.h>
 TList* Head = 0, * Last = 0, * dhead = 0;
 CharNum saveStr;
 using namespace std;
@@ -17,6 +12,7 @@ void entertext() {
     }
     else {
         cout << "error" << endl;
+        exit;
     }
     cout << "s=" << gs << endl;
     fout<< gs;
@@ -147,13 +143,16 @@ CharNum VecFilling() { // заполнение вектора
     cout << "tree" << endl;
     treeprint(Last);
     CreateCode(code,Last, letters);
-    Clear();
-    //codeText(letters, cbuff);
-   
+    
+    codeText(letters, cbuff);
+    decodetext(letters);
+    cout << '\n';
     for (int i = 0; i < letters.size(); i++) {
         cout << letters[i].letter << " code=" << letters[i].code << endl;
     }
-    return (data);
+   Clear(); 
+   return (data);
+    
 }
 int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     int vdl = letters.size();
@@ -301,6 +300,7 @@ void CreateCode(string& code, TList* root, vector<CharNum>& letters)
         for (int i = 0; i < letters.size(); i++)
         {
             if (root->Rec.sall == letters[i].letter) {
+                root->Rec.number = code;
                 letters[i].code = code;
                 break;
             }
@@ -309,24 +309,18 @@ void CreateCode(string& code, TList* root, vector<CharNum>& letters)
     if (code.size())
         code.erase(code.length()-1);
 }
-//void traversal_code(string code) {
-//    this->code = code;
-//    if (list1 != 0 || list2 != 0) {
-//        list1->traversal_code(code + "1");
-//        list2->traversal_code(code + "0");
-//    }
-//}
 void codeText(vector<CharNum>& letters, char* info) {
     string testcode;
     for (int i = 0; i < strlen(info); i++) {
         for (int k = 0; k < letters.size(); k++) {
             if (info[i] == letters[k].letter) {
                 testcode += letters[k].code;
+                testcode += "?";
                 break;
             }
         }
     }
-    cout << testcode;
+    cout << testcode << endl;
     ofstream fout("test.txt");
     if (fout) {
         fout << testcode;
@@ -341,15 +335,29 @@ void codeText(vector<CharNum>& letters, char* info) {
     
     fout.close();
 }
-void decodetext(vector<CharNum>& letters, string code) {
+
+void decodetext(vector<CharNum>& letters) {
     ifstream fin("test.txt");
-    string s;
+    string s,buf;
     getline(fin, s);
     fin.close();
     size_t sr = s.length();
     ofstream fout("finaltest.txt");
-    while (s.find('1') != 0 | s.find('0') != 0) {
-        
-    }
+    string str = "?";
+    int value=0,dl=0;
+    int k =0;
+    while (s.find(str)!=-1) {
+        k = s.find(str);
+        buf.append(s,0,k);
+        for (int i = 0; i < letters.size(); i++) {
+            if (buf == letters[i].code) {
+                fout << letters[i].letter;
+                break;
+            }
+        }
+        buf = "";
+        s.erase(0, k + 1);
+        cout << s << endl;
 
+    }
 }
