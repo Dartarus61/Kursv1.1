@@ -1,12 +1,6 @@
 ﻿// Kurs.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 #include "func.h"
-#include <iostream>
-#include <iostream>
-#include<fstream>
-#include<string>
-#include<vector>
-#include<windows.h>
 using namespace std;
 
 
@@ -17,7 +11,6 @@ int main()
         return 0;
     }
     catch (exception ex)
-
     { 
         cout << "1111";
     }

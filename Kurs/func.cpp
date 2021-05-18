@@ -62,7 +62,6 @@ char* TextInput(int& k) { //считывание текста и запись в бафф
     size_t sr = s.length();
     char* buff = new char[sr+1];
     memcpy(buff, s.c_str(), s.length() + 2);
-    int rt = strlen(buff);
     k = strlen(buff);//передать рандом число чтоб записать туда длину 
     return buff;
 }
@@ -126,16 +125,11 @@ CharNum VecAlphabet(vector<CharNum>& letters) { // заполнение вектора алфавитом 
     letters.push_back(data);
     return(data);
 }
-CharNum VecFilling() { // заполнение вектора
+void VecFilling() { // заполнение вектора
     vector<CharNum> letters;
-    
     VecAlphabet(letters);
-    CharNum data;
-    data.letter = 'out';
-    data._count = 12345;
-    int l = 0;
+    int l = 0;//size of char stroka
     char* cbuff = new char;
-    int w = 0;
     memcpy(cbuff, TextInput(l), strlen(TextInput(l))+1);
     VecSotring(letters, cbuff, l);
     binary_tree(letters);
@@ -143,18 +137,12 @@ CharNum VecFilling() { // заполнение вектора
     cout << "tree" << endl;
     treeprint(Last);
     CreateCode(code,Last, letters);
-    
     codeText(letters, cbuff);
     decodetext(letters);
     cout << '\n';
-    for (int i = 0; i < letters.size(); i++) {
-        cout << letters[i].letter << " code=" << letters[i].code << endl;
-    }
    Clear(); 
-   return (data);
-    
 }
-int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
+void VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     int vdl = letters.size();
     size_t dl = strlen(buff);
     auto iter = letters.begin();
@@ -189,8 +177,6 @@ int VecSotring(vector<CharNum>& letters, char* buff, int& g) { // сортировка
     {
         cout << letters[i].letter << " " << letters[i]._count << endl;
     }
-    
-    return 0;
 }
 void Clear() {
     //Если он вообще существует
@@ -234,12 +220,12 @@ void treeprint(TList* tree) {
        treeprint(tree->list2); //Рекурсивная функция для правого поддерева
     }
 }
-int binary_tree(vector<CharNum>& letters) {
+void binary_tree(vector<CharNum>& letters) {
     int sizev = letters.size();
     int k = 0; //summa vseh chastot
     TList* p;
-    TList* help;
-    TList* helpme;
+    TList* help; //вспомогательный указатель №1
+    TList* helpme; //вспомогательный указатель №2
     help = Head;
     for (int i = 0; i < sizev; i++) {
         AddListEl(letters, i);
@@ -253,8 +239,6 @@ int binary_tree(vector<CharNum>& letters) {
         p->list2 = Head->Next;
         helpme = Head;
         Head = Head->Next->Next;
-        cout << "head#2=" << Head->Rec.leaf1st<< endl;
-        cout <<"p="<< p->Rec.leaf1st << endl;
         for (int r = 1; r < sizev - 1; r++)
         {
            
@@ -267,7 +251,6 @@ int binary_tree(vector<CharNum>& letters) {
                         p->list1 = 0; p->list2 = 0;
                         p = p->Prev;
                         p->list1 = helpme; p->list2 = helpme->Next;
-                        cout << "change" << endl;
                         help->Next->Rec.sall=help->Rec.sall;
                         help->Rec.sall = 0;
                         leafhelp = help->Next->Rec.leaf1st;
@@ -283,11 +266,10 @@ int binary_tree(vector<CharNum>& letters) {
         }
        
     }
-    return 0;
+ 
 }
 void CreateCode(string& code, TList* root, vector<CharNum>& letters)
 {
-    cout << "code=" << code << endl;
     if (root->list1) {
         code+="0";
         CreateCode(code, root->list1, letters);
@@ -327,6 +309,7 @@ void codeText(vector<CharNum>& letters, char* info) {
     }
     else {
         cout << "error" << endl;
+        exit;
     }
     fout << "\n";
     for (int i = 0; i < letters.size(); i++) {
@@ -335,7 +318,6 @@ void codeText(vector<CharNum>& letters, char* info) {
     
     fout.close();
 }
-
 void decodetext(vector<CharNum>& letters) {
     ifstream fin("test.txt");
     string s,buf;
@@ -344,7 +326,6 @@ void decodetext(vector<CharNum>& letters) {
     size_t sr = s.length();
     ofstream fout("finaltest.txt");
     string str = "?";
-    int value=0,dl=0;
     int k =0;
     while (s.find(str)!=-1) {
         k = s.find(str);
@@ -360,4 +341,5 @@ void decodetext(vector<CharNum>& letters) {
         cout << s << endl;
 
     }
+    fout.close();
 }
